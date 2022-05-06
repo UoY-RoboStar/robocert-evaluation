@@ -6,7 +6,7 @@ This repository contains snapshots of the various RoboCert artefacts, for use in
 - a case study (the foraging robot of Buchanan et al.);
 - the metamodel, via the reference manual.
 
-## Prerequisites
+## Prerequisites
 
 To install the tool, you will need:
 
