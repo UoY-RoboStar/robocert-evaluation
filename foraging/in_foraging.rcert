@@ -1,0 +1,25 @@
+specification group SInForaging
+	target = components of module Foraging with
+		turnRadius set to 2
+		turnSpeed set to 2
+	
+	actors = { component Foraging::ObstacleAvoidance as A, component Foraging::ForagingC as C, world as W }
+
+	sequence collectionBad
+		actors A, C, and W
+		C->>W: op Explore()
+		W->>A: event obstacle
+		W->>C: event collected
+		A->>W: op move(0, turnSpeed)
+	
+	sequence collection
+		actors A, C, and W
+		deadline (0) on C: C->>W: op Explore()
+		deadline (0) on A
+			W->>A: event obstacle
+			deadline (0) on C: W->>C: event collected
+			A->>W: op move(0, turnSpeed)
+		end
+
+assertion A1: SInForaging::collectionBad is not observed in the traces model		
+assertion A2: SInForaging::collection is observed in the traces model

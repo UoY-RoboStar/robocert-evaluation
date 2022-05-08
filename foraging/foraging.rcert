@@ -1,0 +1,37 @@
+specification group SForaging
+	target = module Foraging with
+		turnRadius set to 2
+		turnSpeed set to 2
+
+	actors = { target as T, world as W }
+
+	message set Ctrl = { W->>T: event transferred, W->>T: event stored, W->>T: event collected }
+
+	sequence exploreFirst1
+		actor T, W
+		T->>W: op Explore()
+
+	sequence exploreFirst2
+		actor T, W
+		deadline (0 units) on T: T->>W: op Explore()
+
+	sequence mainFlow
+		actor T
+		actor W
+		loop
+			anything except set Ctrl until: W->>T: event collected
+			opt
+				anything except set Ctrl until
+					xalt: [always] W->>T: event stored
+					else: [always] W->>T: event transferred
+					end
+				end
+			end
+		end
+
+assertion group AForaging
+	assertion ef1: SForaging::exploreFirst1 is not observed in the traces model
+	assertion ef2: SForaging::exploreFirst2 is observed in the traces model
+
+	assertion mainFlow: SForaging::mainFlow holds in the traces model
+	assertion mainFlow_TT: SForaging::mainFlow holds in the timed model

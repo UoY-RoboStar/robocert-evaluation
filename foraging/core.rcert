@@ -1,0 +1,38 @@
+// Check core properties.
+csp <$
+const_ForagingC_nest = const_ForagingRP_nest
+$>
+
+specification group CoreMod
+	target = module Foraging with
+		turnRadius set to 2
+		turnSpeed set to 1
+		waitDeadline, explorationDeadline set to 2
+		e set to 1
+		
+specification group CoreForagingC
+	target = controller ForagingC with
+		waitDeadline, explorationDeadline set to 2
+		e set to 1
+
+specification group CoreAvoid
+	target = state machine ObstacleAvoidance::Avoid with
+		turnRadius set to 2
+		turnSpeed set to 2
+
+assertion group CoreModAssertions
+	//assertion Foo: target of CoreMod is timelock-free
+	assertion Dlf: target of CoreMod is deadlock-free
+	// See s3.1 of paper
+	assertion Det: target of CoreMod is not deterministic
+
+assertion group CoreForagingCAssertions
+	//assertion Foo: target of CoreMod is timelock-free
+	assertion Dlf: target of CoreForagingC is deadlock-free
+	// See s3.1 of paper
+	assertion Det: target of CoreForagingC is not deterministic
+
+assertion group CoreAvoidAssertions
+	assertion Dlf: target of CoreAvoid is deadlock-free
+	// Due to use of shared variables
+	assertion Det: target of  CoreAvoid is not deterministic

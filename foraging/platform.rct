@@ -1,0 +1,31 @@
+interface GraspI {
+	Grasp()
+	Transfer()
+	Store()
+}
+
+interface MovementI {
+	// NOTE(Matt): these used to be ls/as, but 'as' is now a keyword.
+	var lspeed: real, aspeed: real
+	
+	move(lspeed: real, aspeed: real)
+	Explore()
+	ExploreNeighbourhood()
+	GoTo(pos: real*real)
+}
+
+interface RState {
+	const nest: real*real
+	var dist: real
+}
+
+robotic platform ForagingRP {
+	provides MovementI
+	provides GraspI
+	provides RState
+
+	event collected
+	event obstacle
+	event stored
+	event transferred
+}

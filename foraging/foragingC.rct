@@ -1,0 +1,21 @@
+controller ForagingC {
+	requires MovementI
+	requires GraspI
+	requires RState
+	uses Positioning
+
+	event collected
+	event stored
+	event transferred
+	
+	sref DTP = DTP
+	sref PositionEstimation = PositionEstimation
+	
+	connection ForagingC on collected   to DTP on collected
+	connection ForagingC on stored      to DTP on stored
+	connection ForagingC on transferred to DTP on transferred
+}
+
+interface Positioning {
+	var position: real*real
+}

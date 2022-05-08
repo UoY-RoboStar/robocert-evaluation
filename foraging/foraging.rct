@@ -1,0 +1,10 @@
+module Foraging {
+	rref ForagingRP        = ForagingRP
+	cref ForagingC         = ForagingC
+	cref ObstacleAvoidance = ObstacleAvoidance
+
+	connection ForagingRP on collected   to ForagingC         on collected   (_async)	
+	connection ForagingRP on obstacle    to ObstacleAvoidance on obstacle    (_async)
+	connection ForagingRP on stored      to ForagingC         on stored      (_async)
+	connection ForagingRP on transferred to ForagingC         on transferred (_async)
+}

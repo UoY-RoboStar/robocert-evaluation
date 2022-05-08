@@ -1,0 +1,58 @@
+specification group SAvoid
+	target = state machine ObstacleAvoidance::Avoid with
+		turnRadius set to 2
+		turnSpeed set to 2
+	
+	actors = { target as T, world as W }
+
+	sequence whenObstacleTurn1
+		actors T and W
+		W->>T: event obstacle
+		deadline (0 units) on T: T->>W: op move(0, turnSpeed)
+
+	sequence turnTurn
+		actors T and W
+		W->>T: event obstacle
+		deadline (0 units) on T: T->>W: op move(0, turnSpeed)
+		wait (1 units) on T
+		deadline (0 units) on T: T->>W: op move(0, 0)
+	
+	sequence whenObstacleTurn2
+		actors T and W
+		anything until: W->>T: event obstacle
+		deadline (0 units) on T
+			anything except {T->>W: op move(any, any)} until: T->>W: op move(0, turnSpeed)
+		end
+		anything until: deadlock on T
+	
+	sequence whenObstacleTurn2A
+		actors T and W
+		anything until: W->>T: event obstacle
+		deadline (0 units) on T
+			anything except {T->>W: op move(any, any)} until: T->>W: op move(0, any)
+		end
+		anything until: deadlock on T
+	
+	sequence whenObstacleTurn3
+		actors T and W
+		loop
+			anything until: W->>T: event obstacle
+			deadline (0 units) on T: anything except {T->>W: op move(any, any)} until: T->>W: op move(0, turnSpeed)
+		end
+
+	sequence turnTime
+		actors T and W
+		loop
+			anything until: T->>W: op move(0, turnSpeed)
+			deadline (1 /*turnRadius / turnSpeed*/ units) on T
+				anything except {T->>W: op move(0, any)} until: T->>W: op move(0, 0)
+			end
+		end
+		
+assertion group SAvoid_Assts
+	assertion whenObstacleTurn1: SAvoid::whenObstacleTurn1 is observed in the traces model
+	assertion turnThenTurn: SAvoid::turnTurn is observed in the traces model
+	assertion whenObstacleTurn2: SAvoid::whenObstacleTurn2 holds in the traces model
+	assertion whenObstacleTurn2A: SAvoid::whenObstacleTurn2A holds in the traces model
+	assertion whenObstacleTurn3: SAvoid::whenObstacleTurn3 holds in the traces model
+	assertion turnTime: SAvoid::turnTime holds in the traces model

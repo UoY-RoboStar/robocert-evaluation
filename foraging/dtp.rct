@@ -1,0 +1,87 @@
+stm DTP {
+	requires MovementI
+	requires GraspI
+	requires RState
+	requires Positioning
+	
+	event collected
+	event stored
+	event transferred
+	
+	var P: real, source: real*real
+	const waitDeadline: nat, e: real, explorationDeadline: nat
+	
+	clock T
+	
+	initial Init
+	
+	state Exploring {
+		during Explore()
+	}
+	
+	state GoToNest {
+		entry dist = 0
+		during GoTo(nest)
+	}
+		
+	state GoToNestDirectly {
+		during GoTo(nest)
+	}
+	
+	state GoToSource {
+		during GoTo(source)
+	}
+		
+	state Neighbourhood {
+		entry #T
+		during ExploreNeighbourhood()
+	}
+	
+	state WaitForTransfer {
+		entry #T
+		during Transfer()
+	}
+	
+	transition Explore { from Init to Exploring }
+	
+	transition ExploreCollect { from Exploring to GoToNest trigger collected }
+	
+	transition NestStore { from GoToNest to GoToSource trigger stored }
+
+	transition NestWait { from GoToNest to WaitForTransfer condition P < dist }
+	
+	transition Transferred { from WaitForTransfer to GoToSource trigger transferred }
+	
+	transition WaitGaveUp { from WaitForTransfer to GoToNestDirectly condition waitDeadline < since(T) }
+	
+	transition NestDirectStore { from GoToNestDirectly to GoToSource trigger stored }
+	
+	transition EnterNeighbourhood { from GoToSource to Neighbourhood condition d(source, position) < e }
+
+	transition NeighbourhoodCollect {
+		from Neighbourhood to GoToNest
+		trigger collected
+		action P = incP(P)
+	}
+	transition NeighbourhoodGaveUp {
+		from Neighbourhood to Exploring
+		condition explorationDeadline < since(T)
+		action P = decP(P)
+	}
+	
+	transition SourceCollect { from GoToSource to GoToNest trigger collected }
+}
+
+function decP(x: real): real {
+	precondition 0 < x
+	postcondition 0 <= result /\ result < x
+}
+
+function incP(x: real): real {
+	precondition 0 < x
+	postcondition x < result
+}
+
+function d(x: real*real, y: real*real): real {
+	postcondition 0 <= result
+}

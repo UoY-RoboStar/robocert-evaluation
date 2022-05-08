@@ -1,0 +1,36 @@
+controller ObstacleAvoidance {
+	requires MovementI
+
+	event obstacle
+	
+	stm Avoid {
+		requires MovementI
+		
+		event obstacle
+
+		// turnRadius has been added to make model checking tractable.
+		const turnSpeed: nat, turnRadius: nat // = 180
+
+		clock T
+		
+		initial Init
+		
+		transition IW { from Init to Waiting }
+		
+		state Waiting {}
+		
+		transition WT { from Waiting to Turning trigger obstacle#T }
+		
+		state Turning {
+			entry move(0, turnSpeed)
+		}
+		
+		transition TW {
+			from      Turning to Waiting
+			condition turnRadius/turnSpeed <= since(T)
+			action    move(0, 0)
+		}
+	}
+	
+	connection ObstacleAvoidance on obstacle to Avoid on obstacle
+}

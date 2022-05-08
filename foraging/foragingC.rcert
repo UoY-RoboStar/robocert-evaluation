@@ -1,0 +1,24 @@
+csp <$ const_ForagingC_nest = const_ForagingRP_nest $>
+
+specification group SForagingC
+	target = controller ForagingC
+	
+	actors = { target as T, world as W }
+	
+	message set Ctrl =
+	{ W->>T: event transferred,W->>T: event stored, W->>T: event collected }
+	
+	sequence mainFlow
+		actor T
+		actor W
+		loop
+			any except set Ctrl until: W->>T: event collected (hot)
+			any except set Ctrl until
+				xalt: W->>T: event stored
+				else: W->>T: event transferred
+				end
+			end
+		end
+		
+assertion mainFlow: SForagingC::mainFlow holds in the traces model
+assertion mainFlowTT: SForagingC::mainFlow holds in the timed model

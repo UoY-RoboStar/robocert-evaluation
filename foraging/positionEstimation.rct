@@ -1,0 +1,38 @@
+stm PositionEstimation {
+	requires MovementI
+	requires Positioning
+	
+	var old_lspeed: real, old_aspeed: real, t: nat
+	
+	initial Init
+	
+	transition IR { from Init to Record }
+	
+	state Record {
+		entry old_lspeed = lspeed; old_aspeed = aspeed
+	}
+	
+	transition RE { from Record to ElapseTime }
+	
+	state ElapseTime {
+		entry wait(1)
+	}
+	
+	transition Tick {
+		from ElapseTime
+		to ElapseTime
+		condition old_lspeed == lspeed /\ old_aspeed == aspeed
+		action t = t + 1
+	}
+	
+	transition ER {
+		from ElapseTime to Record
+		condition old_lspeed != lspeed \/ old_aspeed != aspeed
+		action position = calculatePosition(position, old_lspeed, old_aspeed, t)
+	}
+}
+
+// NOTE(Matt): Positioning moved to foragingC.
+
+// NOTE(Matt): ls/as renamed to lspeed/aspeed for technical reasons
+function calculatePosition(pos: real*real, lspeed: real, aspeed: real, t: nat): real*real {}
