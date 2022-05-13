@@ -17,3 +17,6 @@ installed):
    no action for manually regenerating the CSP output).
 3. In `csp-gen/timed/robocert/pkg`, corresponding `.csp` files will appear.
    Open these in FDR4 or `refines` to check assertions.
+4. If there are any mentions of missing CSP files, try pressing the
+   cog icon next to 'CSP' in the toolbar to generate CSP for the RoboChart
+   models.
