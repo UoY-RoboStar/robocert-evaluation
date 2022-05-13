@@ -7,7 +7,8 @@ subdirectories of this directory.
 ## Prerequisites
 
 - Java 17;
-- Eclipse (tested with 2021-12 and 2022-03, may work with older);
+- Eclipse (2021-12 preferred, 2022-03 may work but is not well-supported,
+  recent older versions may also work);
 - RoboTool version 3 (tested with CSP generator v3.0.0.202202010017; we
   recommend installing all plugins);
 - RoboTool's prerequisites (for instance, Epsilon - you will likely need to
