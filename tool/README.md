@@ -1,8 +1,14 @@
 # Tool snapshots for RoboCert v0.1.0
 
-Integration of RoboCert with the RoboTool update sites is forthcoming.
-Until then, you can install snapshots of the RoboCert tooling using the
-subdirectories of this directory.
+**NOTE:** As of 2022-08-01, the
+[RoboTool update site](https://robostar.cs.york.ac.uk/robotool/)
+now contains RoboCert, which can be installed alongside the other RoboTool
+plugins.  (Make sure you install both metamodel and textual plugins.)
+This version may eventually diverge from what is discussed in any papers.
+
+This directory contains a fallback pseudo-update site that can be cloned
+into the local filesystem and used to provide RoboCert plugins that match
+the version described in the RoboCert ICFEM'22 paper.
 
 ## Prerequisites
 
